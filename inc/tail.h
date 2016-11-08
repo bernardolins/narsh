@@ -12,4 +12,5 @@ int num_of_lines = 10;
 int follow = 0;
 
 int main(int argc, char* argv[]);
-int open_file(char* dir);
+FILE* open_file(const char* path);
+void walk_file(FILE *file);
