@@ -1,8 +1,5 @@
 #include "tail.h"
 
-#define BUFF_SIZE 4096
-
-
 int main(int argc, char* argv[]) {
   int opt = 0;
 
@@ -21,8 +18,8 @@ int main(int argc, char* argv[]) {
   }
 
   FILE* file = open_file(file_name);
-  off_t pos = walk_file(file);
-  print_line(file, pos);
+  off_t first_byte_to_print = walk_file(file);
+  print_line(file, first_byte_to_print);
 
   return(0);
 }
@@ -36,29 +33,29 @@ FILE* open_file(const char* path) {
   return(file);
 }
 
-void print_line(FILE *file, off_t pos) {
-  fseek(file, pos, SEEK_SET);
-  char c;
-  while((c = fgetc(file)) != EOF) {
-    putchar(c);
-    fseek(file, 0, SEEK_CUR);
-  }
-}
-
 off_t walk_file(FILE *file) {
   fseek(file, 0, SEEK_END);
   off_t pos = ftell(file);
   int current_byte;
-  int end_offset_line = 0;
+  int num_of_lines_from_end = 0;
 
-  while(end_offset_line < num_of_lines) {
+  while(num_of_lines_from_end < num_of_lines) {
     current_byte = fgetc(file); 
     if(current_byte == '\n') {
-      end_offset_line++;
+      num_of_lines_from_end++;
     }
     pos = ftell(file);
     fseek(file, -2, SEEK_CUR);
   }
 
   return pos;
+}
+
+void print_line(FILE *file, off_t initial_pos) {
+  fseek(file, initial_pos, SEEK_SET);
+  char c;
+  while((c = fgetc(file)) != EOF) {
+    putchar(c);
+    fseek(file, 0, SEEK_CUR);
+  }
 }
