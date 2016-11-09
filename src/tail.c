@@ -1,5 +1,8 @@
 #include "tail.h"
 
+#define BUFF_SIZE 4096
+
+
 int main(int argc, char* argv[]) {
   int opt = 0;
 
@@ -33,10 +36,21 @@ FILE* open_file(const char* path) {
   return(file);
 }
 
+void print_line(FILE *file, off_t startline) {
+  int fd;
+  fd = fileno(file);
+  int nread;
+  char buffer[BUFF_SIZE];
+  lseek(fd,(startline + 1),SEEK_SET);
+  while((nread= read(fd,buffer,BUFF_SIZE)) > 0) {
+    write(STDOUT_FILENO, buffer, nread);
+  }
+}
+
 void walk_file(FILE *file) {
   off_t fposition;
   fseek(file,0,SEEK_END);
-  fposition= ftell(file);
+  fposition = ftell(file);
   off_t index = fposition;
   off_t end = fposition;
   long countlines = 0;
@@ -53,6 +67,6 @@ void walk_file(FILE *file) {
     fposition--;
     fseek(file,fposition,SEEK_SET);
   }
-  printLine(file, fposition);
+  print_line(file, fposition);
   fclose(file);
 }
