@@ -21,8 +21,8 @@ int main(int argc, char* argv[]) {
   }
 
   FILE* file = open_file(file_name);
-  walk_file(file);
-
+  off_t pos = walk_file(file);
+  print_line(file, pos);
 
   return(0);
 }
@@ -36,37 +36,29 @@ FILE* open_file(const char* path) {
   return(file);
 }
 
-void print_line(FILE *file, off_t startline) {
-  int fd;
-  fd = fileno(file);
-  int nread;
-  char buffer[BUFF_SIZE];
-  lseek(fd,(startline + 1),SEEK_SET);
-  while((nread= read(fd,buffer,BUFF_SIZE)) > 0) {
-    write(STDOUT_FILENO, buffer, nread);
+void print_line(FILE *file, off_t pos) {
+  fseek(file, pos, SEEK_SET);
+  char c;
+  while((c = fgetc(file)) != EOF) {
+    putchar(c);
+    fseek(file, 0, SEEK_CUR);
   }
 }
 
-void walk_file(FILE *file) {
-  off_t fposition;
-  fseek(file,0,SEEK_END);
-  fposition = ftell(file);
-  off_t index = fposition;
-  off_t end = fposition;
-  long countlines = 0;
-  char cbyte;
+off_t walk_file(FILE *file) {
+  fseek(file, 0, SEEK_END);
+  off_t pos = ftell(file);
+  int current_byte;
+  int end_offset_line = 0;
 
-  for(index; index >= 0; index --) {
-    cbyte= fgetc(file);
-    if (cbyte == '\n' && (end - index) > 1) {
-      countlines ++;
-      if(countlines == num_of_lines) {
-        break;
-      }
+  while(end_offset_line < num_of_lines) {
+    current_byte = fgetc(file); 
+    if(current_byte == '\n') {
+      end_offset_line++;
     }
-    fposition--;
-    fseek(file,fposition,SEEK_SET);
+    pos = ftell(file);
+    fseek(file, -2, SEEK_CUR);
   }
-  print_line(file, fposition);
-  fclose(file);
+
+  return pos;
 }

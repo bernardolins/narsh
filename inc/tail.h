@@ -14,4 +14,4 @@ int follow = 0;
 int main(int argc, char* argv[]);
 FILE* open_file(const char* path);
 void print_line(FILE *file, off_t startline);
-void walk_file(FILE *file);
+off_t walk_file(FILE *file);
