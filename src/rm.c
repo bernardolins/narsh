@@ -22,6 +22,8 @@ int main(int argc, char* argv[]) {
 
   remove_from_list(file_names, non_opt_arguments);
 
+  free(file_names);
+
   return(0);
 }
 
@@ -41,13 +43,19 @@ void remove_from_list(char** files, int number_of_files) {
   for(i = 0; i < number_of_files; i++) {
     if(!is_regular_file(files[i])) {
       if(force) {
-        if(remove(files[i]) == -1) {
-          fprintf(stderr, "%s: %s\n", files[i], strerror(errno));
-        }
+        try_remove_one(files[i]);
       } else {
         fprintf(stderr, "rm: %s: is a directory\n", files[i]);
       }
+    } else {
+      try_remove_one(files[i]);
     }
+  }
+}
+
+void try_remove_one(char* file) {
+  if(remove(file) == -1) {
+    fprintf(stderr, "%s: %s\n", file, strerror(errno));
   }
 }
 

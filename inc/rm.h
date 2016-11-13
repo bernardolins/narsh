@@ -16,4 +16,5 @@ int force = 0;
 int main(int argc, char* argv[]);
 char** initialize(int size);
 void remove_from_list(char** files, int number_of_files);
+void try_remove_one(char* file);
 int is_regular_file(char* path);
