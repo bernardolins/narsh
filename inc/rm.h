@@ -9,6 +9,11 @@
 #include <string.h>
 
 
+#define MAX_FILE_NAME 1024
+
 int force = 0;
 
 int main(int argc, char* argv[]);
+char** initialize(int size);
+void remove_from_list(char** files, int number_of_files);
+int is_regular_file(char* path);

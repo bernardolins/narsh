@@ -2,8 +2,9 @@
 
 int main(int argc, char* argv[]) {
   int opt = 0;
+  int non_opt_arguments = 0;
 
-  const char* file_name = argv[argc-1];
+  char** file_names = initialize(argc);
 
   while(optind < argc) {
     if((opt = getopt(argc, argv, "f")) != -1) {
@@ -13,14 +14,45 @@ int main(int argc, char* argv[]) {
          break;
       }
     } else {
-      file_name = argv[optind];
+      file_names[non_opt_arguments] = argv[optind];
       optind++;
+      non_opt_arguments++;
     }
   }
 
-  if(remove(file_name) == -1) {
-    fprintf(stderr, "%s\n", strerror(errno));
-  }
+  remove_from_list(file_names, non_opt_arguments);
 
   return(0);
+}
+
+char** initialize(int size) {
+  char** strings = (char**)malloc(size * sizeof(char*));
+
+  int i;
+  for(i = 0; i < size; i++) {
+    strings[i] = malloc((MAX_FILE_NAME + 1) * sizeof(char));
+  }
+
+  return strings;
+}
+
+void remove_from_list(char** files, int number_of_files) {
+  int i;
+  for(i = 0; i < number_of_files; i++) {
+    if(!is_regular_file(files[i])) {
+      if(force) {
+        if(remove(files[i]) == -1) {
+          fprintf(stderr, "%s: %s\n", files[i], strerror(errno));
+        }
+      } else {
+        fprintf(stderr, "rm: %s: is a directory\n", files[i]);
+      }
+    }
+  }
+}
+
+int is_regular_file(char *path) {
+  struct stat path_stat;
+  stat(path, &path_stat);
+  return S_ISREG(path_stat.st_mode);
 }
