@@ -19,8 +19,8 @@ Binaries are compiled into `bin/*` directory. Just run as if it's a linux comman
 ## Available options
 
 ```bash
-ls [-l -a]
-rm [-f]
-tail [-n]
-head [-n -c]
+bin/ls [-l -a]
+bin/rm [-f]
+bin/tail [-n]
+bin/head [-n -c]
 ```
