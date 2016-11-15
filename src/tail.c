@@ -45,12 +45,13 @@ off_t walk_file(FILE *file) {
   int num_of_lines_from_end = 0;
 
   while(num_of_lines_from_end < num_of_lines) {
-    current_byte = fgetc(file); 
+    current_byte = fgetc(file);
     if(current_byte == '\n') {
       num_of_lines_from_end++;
     }
     pos = ftell(file);
     fseek(file, -2, SEEK_CUR);
+    if(pos == 1) return 0;
   }
 
   return pos;
