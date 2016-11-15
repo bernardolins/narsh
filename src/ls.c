@@ -44,11 +44,6 @@ void print_entry(struct dirent* dir_entry) {
   char sep_char = '\t';
   if(list) sep_char = '\n';
 
-  //struct winsize w;
-  //ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-  //int cols = w.ws_col;
-  //printf("%d\n", cols);
-
   switch(dir_entry->d_type) {
     case DT_DIR:
       printf(DIR_COLOR "%-15.15s%c", dir_entry->d_name, sep_char);
