@@ -8,13 +8,16 @@ BIN=bin
 TAILNAME=tail
 TAILOBJS=$(OBJ)/tail.o
 
+HEADNAME=head
+HEADOBJS=$(OBJ)/head.o
+
 RMNAME=rm
 RMOBJS=$(OBJ)/rm.o
 
 LSNAME=ls
 LSOBJS=$(OBJ)/ls.o
 
-all: tail rm ls
+all: tail head rm ls
 
 clean:
 	rm -rf $(OBJ) $(BIN)/*
@@ -27,6 +30,9 @@ deps:
 tail: clean deps $(TAILOBJS)
 	$(CC) -o $(BIN)/$(TAILNAME) $(TAILOBJS) -I$(INC)
 
+head: clean deps $(HEADOBJS)
+	$(CC) -o $(BIN)/$(HEADNAME) $(HEADOBJS) -I$(INC)
+
 rm: clean deps $(RMOBJS)
 	$(CC) -o $(BIN)/$(RMNAME) $(RMOBJS) -I$(INC)
 
@@ -36,6 +42,10 @@ ls: clean deps $(LSOBJS)
 # build tail object
 $(OBJ)/tail.o: $(SRC)/tail.c
 	$(CC) -o $(OBJ)/tail.o -c $(SRC)/tail.c -I$(INC)
+
+# build head object
+$(OBJ)/head.o: $(SRC)/head.c
+	$(CC) -o $(OBJ)/head.o -c $(SRC)/head.c -I$(INC)
 
 # build rm object
 $(OBJ)/rm.o: $(SRC)/rm.c
