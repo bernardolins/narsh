@@ -10,7 +10,7 @@ LIB=lib
 
 LIBINC=$(LIB)
 LIBSRC=$(LIB)
-LIBOBJ=$(LIB)
+LIBOBJ=$(LIB)/obj
 
 TAILNAME=tail
 TAILOBJS=$(OBJ)/tail.o
@@ -28,17 +28,14 @@ MANNAME=man
 MANOBJS=$(OBJ)/man.o
 
 LIBNAME=libnarsh.a
-LIBOBJS=$(OBJ)/lib/libnarsh.o
+LIBOBJS=$(LIBOBJ)/libnarsh.o
 
 LIBFILES=$(LIBSRC)/narsh.c
-
-LIBARGS=-static -L$(LIB) -lnarsh -I$(LIBINC)
 
 all: lib tail head rm ls
 
 clean:
 	rm -rf $(OBJ) $(BIN)/*
-	mkdir $(OBJ)
 
 deps:
 	mkdir -p $(OBJ)
@@ -52,7 +49,7 @@ lib: libdeps
 	$(CC) -c $(LIBFILES) -o $(LIBOBJS) -I$(LIBINC)
 	$(AR) rcs $(LIB)/$(LIBNAME) $(LIBOBJS)
 
-tail: clean deps $(TAILOBJS)
+tail: clean deps lib $(TAILOBJS)
 	$(CC) -o $(BIN)/$(TAILNAME) $(TAILOBJS) -L$(LIB) -lnarsh -I$(INC)
 
 head: clean deps $(HEADOBJS)
@@ -69,12 +66,11 @@ man: clean deps $(MANOBJS)
 
 # build tail object
 $(OBJ)/tail.o: $(SRC)/tail.c
-	$(CC) -o $(OBJ)/tail.o -c $(SRC)/tail.c -I$(INC)
+	$(CC) -o $(OBJ)/tail.o -c $(SRC)/tail.c -I$(INC) -I$(LIBINC)
 
 # build head object
 $(OBJ)/head.o: $(SRC)/head.c
 	$(CC) -o $(OBJ)/head.o -c $(SRC)/head.c -I$(INC)
-
 # build rm object
 $(OBJ)/rm.o: $(SRC)/rm.c
 	$(CC) -o $(OBJ)/rm.o -c $(SRC)/rm.c -I$(INC)
