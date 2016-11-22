@@ -23,8 +23,8 @@ int main(int argc, char* argv[]) {
   }
 
   FILE* file = open_file(file_name);
-  off_t first_byte_to_print = walk_file(file, num_of_lines);
-  print_line(file, first_byte_to_print);
+  off_t first_byte_to_print = walk_file_from_end(file, num_of_lines);
+  print_line_from_end(file, first_byte_to_print);
 
   return(0);
 }

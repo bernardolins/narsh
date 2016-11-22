@@ -9,5 +9,8 @@
 #include <string.h>
 
 FILE* open_file(const char* path);
-void print_line(FILE *file, off_t startline);
-off_t walk_file(FILE *file, int num_of_lines);
+void print_line_from_end(FILE *file, off_t startline);
+off_t walk_file_from_end(FILE *file, int num_of_lines);
+
+void print_line_from_beg(FILE *file, off_t startline);
+off_t walk_file_from_beg(FILE *file, int num_of_lines);

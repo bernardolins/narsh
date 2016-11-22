@@ -35,52 +35,14 @@ int main(int argc, char* argv[]) {
 
   FILE* file = open_file(file_name);
   if(line_set) {
-    off_t last_byte_to_print = walk_file(file);
-    print_line(file, last_byte_to_print);
+    off_t last_byte_to_print = walk_file_from_beg(file, num_of_lines);
+    print_line_from_beg(file, last_byte_to_print);
   }
 
   if(byte_set) {
-    print_line(file, num_of_bytes);
+    print_line_from_beg(file, num_of_bytes);
   }
 
   return(0);
 }
 
-FILE* open_file(const char* path) {
-  FILE* file = fopen(path, "r");
-  if(file == NULL) {
-    fprintf(stderr, "%s\n", strerror(errno));
-    exit(errno);
-  }
-  return(file);
-}
-
-off_t walk_file(FILE *file) {
-  fseek(file, 0, SEEK_SET);
-  off_t pos = ftell(file);
-  int current_byte;
-  int num_of_lines_from_beginning = 0;
-
-  while(num_of_lines_from_beginning < num_of_lines) {
-    current_byte = fgetc(file);
-    if(current_byte == '\n') {
-      num_of_lines_from_beginning++;
-    } else if(current_byte == EOF) break;
-    pos = ftell(file);
-    fseek(file, 0, SEEK_CUR);
-  }
-
-  return pos;
-}
-
-void print_line(FILE *file, off_t final_pos) {
-  fseek(file, 0, SEEK_SET);
-  off_t  pos = ftell(file);
-  char c;
-  while(pos != final_pos) {
-    c = fgetc(file);
-    pos = ftell(file);
-    putchar(c);
-    fseek(file, 0, SEEK_CUR);
-  }
-}
