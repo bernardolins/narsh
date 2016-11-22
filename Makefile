@@ -53,16 +53,16 @@ tail: clean deps lib $(TAILOBJS)
 	$(CC) -o $(BIN)/$(TAILNAME) $(TAILOBJS) -L$(LIB) -lnarsh -I$(INC)
 
 head: clean deps $(HEADOBJS)
-	$(CC) -o $(BIN)/$(HEADNAME) $(HEADOBJS) -I$(INC)
+	$(CC) -o $(BIN)/$(HEADNAME) $(HEADOBJS) -L$(LIB) -lnarsh -I$(INC)
 
 rm: clean deps $(RMOBJS)
-	$(CC) -o $(BIN)/$(RMNAME) $(RMOBJS) -I$(INC)
+	$(CC) -o $(BIN)/$(RMNAME) $(RMOBJS) -L$(LIB) -lnarsh -I$(INC)
 
 ls: clean deps $(LSOBJS)
-	$(CC) -o $(BIN)/$(LSNAME) $(LSOBJS) -I$(INC)
+	$(CC) -o $(BIN)/$(LSNAME) $(LSOBJS) -L$(LIB) -lnarsh -I$(INC)
 
 man: clean deps $(MANOBJS)
-	$(CC) -o $(BIN)/$(MANNAME) $(MANOBJS) -I$(INC)
+	$(CC) -o $(BIN)/$(MANNAME) $(MANOBJS) -L$(LIB) -lnarsh -I$(INC)
 
 # build tail object
 $(OBJ)/tail.o: $(SRC)/tail.c
@@ -70,15 +70,15 @@ $(OBJ)/tail.o: $(SRC)/tail.c
 
 # build head object
 $(OBJ)/head.o: $(SRC)/head.c
-	$(CC) -o $(OBJ)/head.o -c $(SRC)/head.c -I$(INC)
+	$(CC) -o $(OBJ)/head.o -c $(SRC)/head.c -I$(INC) -I$(LIBINC)
 # build rm object
 $(OBJ)/rm.o: $(SRC)/rm.c
-	$(CC) -o $(OBJ)/rm.o -c $(SRC)/rm.c -I$(INC)
+	$(CC) -o $(OBJ)/rm.o -c $(SRC)/rm.c -I$(INC) -I$(LIBINC)
 
 # build ls object
 $(OBJ)/ls.o: $(SRC)/ls.c
-	$(CC) -o $(OBJ)/ls.o -c $(SRC)/ls.c -I$(INC)
+	$(CC) -o $(OBJ)/ls.o -c $(SRC)/ls.c -I$(INC) -I$(LIBINC)
 
 # build man object
 $(OBJ)/man.o: $(SRC)/man.c
-	$(CC) -o $(OBJ)/man.o -c $(SRC)/man.c -I$(INC)
+	$(CC) -o $(OBJ)/man.o -c $(SRC)/man.c -I$(INC) -I$(LIBINC)
