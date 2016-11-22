@@ -1,9 +1,16 @@
 CC=gcc
+AR=ar
 
 INC=inc
 SRC=src
 OBJ=obj
 BIN=bin
+
+LIB=lib
+
+LIBINC=$(LIB)
+LIBSRC=$(LIB)
+LIBOBJ=$(LIB)
 
 TAILNAME=tail
 TAILOBJS=$(OBJ)/tail.o
@@ -20,7 +27,14 @@ LSOBJS=$(OBJ)/ls.o
 MANNAME=man
 MANOBJS=$(OBJ)/man.o
 
-all: tail head rm ls
+LIBNAME=libnarsh.a
+LIBOBJS=$(OBJ)/lib/libnarsh.o
+
+LIBFILES=$(LIBSRC)/narsh.c
+
+LIBARGS=-static -L$(LIB) -lnarsh -I$(LIBINC)
+
+all: lib tail head rm ls
 
 clean:
 	rm -rf $(OBJ) $(BIN)/*
@@ -30,8 +44,16 @@ deps:
 	mkdir -p $(OBJ)
 	mkdir -p $(BIN)
 
+libdeps:
+	rm -f $(LIB)/$(LIBNAME)
+	mkdir -p $(LIBOBJ)
+
+lib: libdeps
+	$(CC) -c $(LIBFILES) -o $(LIBOBJS) -I$(LIBINC)
+	$(AR) rcs $(LIB)/$(LIBNAME) $(LIBOBJS)
+
 tail: clean deps $(TAILOBJS)
-	$(CC) -o $(BIN)/$(TAILNAME) $(TAILOBJS) -I$(INC)
+	$(CC) -o $(BIN)/$(TAILNAME) $(TAILOBJS) -L$(LIB) -lnarsh -I$(INC)
 
 head: clean deps $(HEADOBJS)
 	$(CC) -o $(BIN)/$(HEADNAME) $(HEADOBJS) -I$(INC)
